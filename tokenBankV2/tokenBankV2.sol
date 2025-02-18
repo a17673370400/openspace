@@ -88,6 +88,7 @@ contract TokenBank {
     
     event depositLog(address indexed _address, uint256 value);
     event withdrawLog(address indexed _address, uint256 value);
+    event depositLog1(address indexed _address, uint256 value,bytes data);
 
     constructor(address _tokenaddress){
         token = IERC20(_tokenaddress);
@@ -128,7 +129,7 @@ contract TokenBankV2 is TokenBank {
         
         // 更新用户存款余额
         balances[from] += value;
-        emit depositLog(from, value);
+        emit depositLog1(from, value,data);
         // data 可用于扩展逻辑，目前未作处理
     }
 }
