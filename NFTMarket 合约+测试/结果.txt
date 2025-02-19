@@ -1,0 +1,130 @@
+$ forge test --mc CounterTest -vvvv
+[⠊] Compiling...
+[⠰] Compiling 1 files with Solc 0.8.20
+[⠔] Solc 0.8.20 finished in 1.30s
+Compiler run successful!
+
+Ran 3 tests for test/test_bankV5.sol:CounterTest
+[PASS] testFuzz_list(uint256,address) (runs: 257, μ: 185009, ~: 185058)
+Traces:
+  [224860] CounterTest::testFuzz_list(20719366484027917296711456234216205408809251 [2.071e43], 0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75)
+    ├─ [0] console::log("Bound result", 8822776848228937314866 [8.822e21]) [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] VM::assume(true) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(ECRecover: [0x0000000000000000000000000000000000000001])
+    │   └─ ← [Return]
+    ├─ [46071] NFTMarket::mint()
+    │   ├─ emit Mint(owner: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 0)
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(ECRecover: [0x0000000000000000000000000000000000000001])
+    │   └─ ← [Return]
+    ├─ [69334] NFTMarket::list(0, 8822776848228937314866 [8.822e21], DummyERC20: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   ├─ emit List(seller: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 0, price: 8822776848228937314866 [8.822e21])
+    │   └─ ← [Stop]
+    ├─ [29982] DummyERC20::transfer(0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75, 8822776848228937314866 [8.822e21])
+    │   ├─ emit Transfer(from: CounterTest: [0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496], to: 0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75, value: 8822776848228937314866 [8.822e21])  
+    │   └─ ← [Return] true
+    ├─ [0] VM::prank(0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75)
+    │   └─ ← [Return]
+    ├─ [24735] DummyERC20::approve(NFTMarket: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 8822776848228937314866 [8.822e21])
+    │   ├─ emit Approval(owner: 0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75, spender: NFTMarket: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], value: 8822776848228937314866 [8.822e21])
+    │   └─ ← [Return] true
+    ├─ [0] VM::prank(0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75)
+    │   └─ ← [Return]
+    ├─ [30001] NFTMarket::buyNFT(0)
+    │   ├─ [26054] DummyERC20::transferFrom(0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75, ECRecover: [0x0000000000000000000000000000000000000001], 8822776848228937314866 [8.822e21])  
+    │   │   ├─ emit Transfer(from: 0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75, to: ECRecover: [0x0000000000000000000000000000000000000001], value: 8822776848228937314866 [8.822e21])
+    │   │   └─ ← [Return] true
+    │   ├─ emit Purchase(buyer: 0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75, tokenId: 0, price: 8822776848228937314866 [8.822e21], paymentToken: DummyERC20: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   └─ ← [Stop]
+    ├─ [540] NFTMarket::nftOwner(0) [staticcall]
+    │   └─ ← [Return] 0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75
+    ├─ [0] VM::assertEq(0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75, 0xf1fbd3Dc39B022b68605F983Ae12c68D87607f75) [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Stop]
+
+[PASS] test_buy() (gas: 297908)
+Traces:
+  [297908] CounterTest::test_buy()
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3:
+nft no list)
+    │   └─ ← [Return]
+    ├─ [2567] NFTMarket::buyNFT(0)
+    │   └─ ← [Revert] revert: nft no list
+    ├─ [0] VM::prank(ECRecover: [0x0000000000000000000000000000000000000001])
+    │   └─ ← [Return]
+    ├─ [46071] NFTMarket::mint()
+    │   ├─ emit Mint(owner: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 0)
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(ECRecover: [0x0000000000000000000000000000000000000001])
+    │   └─ ← [Return]
+    ├─ [69334] NFTMarket::list(0, 100, DummyERC20: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   ├─ emit List(seller: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 0, price: 100)
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(SHA-256: [0x0000000000000000000000000000000000000002])
+    │   └─ ← [Return]
+    ├─ [24735] DummyERC20::approve(NFTMarket: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 100000 [1e5])
+    │   ├─ emit Approval(owner: SHA-256: [0x0000000000000000000000000000000000000002], spender: NFTMarket: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], value: 100000 [1e5])        
+    │   └─ ← [Return] true
+    ├─ [0] VM::prank(SHA-256: [0x0000000000000000000000000000000000000002])
+    │   └─ ← [Return]
+    ├─ [34801] NFTMarket::buyNFT(0)
+    │   ├─ [30854] DummyERC20::transferFrom(SHA-256: [0x0000000000000000000000000000000000000002], ECRecover: [0x0000000000000000000000000000000000000001], 100)
+    │   │   ├─ emit Transfer(from: SHA-256: [0x0000000000000000000000000000000000000002], to: ECRecover: [0x0000000000000000000000000000000000000001], value: 100)
+    │   │   └─ ← [Return] true
+    │   ├─ emit Purchase(buyer: SHA-256: [0x0000000000000000000000000000000000000002], tokenId: 0, price: 100, paymentToken: DummyERC20: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   └─ ← [Stop]
+    ├─ [540] NFTMarket::nftOwner(0) [staticcall]
+    │   └─ ← [Return] SHA-256: [0x0000000000000000000000000000000000000002]
+    ├─ [0] VM::assertEq(SHA-256: [0x0000000000000000000000000000000000000002], SHA-256: [0x0000000000000000000000000000000000000002]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(SHA-256: [0x0000000000000000000000000000000000000002])
+    │   └─ ← [Return]
+    ├─ [24171] NFTMarket::mint()
+    │   ├─ emit Mint(owner: SHA-256: [0x0000000000000000000000000000000000000002], tokenId: 1)
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(SHA-256: [0x0000000000000000000000000000000000000002])
+    │   └─ ← [Return]
+    ├─ [69334] NFTMarket::list(1, 100, DummyERC20: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   ├─ emit List(seller: SHA-256: [0x0000000000000000000000000000000000000002], tokenId: 1, price: 100)
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(SHA-256: [0x0000000000000000000000000000000000000002])
+    │   └─ ← [Return]
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3:  not nftowner buy)
+    │   └─ ← [Return]
+    ├─ [718] NFTMarket::buyNFT(1)
+    │   └─ ← [Revert] revert: not nftowner buy
+    └─ ← [Stop]
+
+[PASS] test_list() (gas: 158024)
+Traces:
+  [158024] CounterTest::test_list()
+    ├─ [0] VM::prank(ECRecover: [0x0000000000000000000000000000000000000001])
+    │   └─ ← [Return]
+    ├─ [46071] NFTMarket::mint()
+    │   ├─ emit Mint(owner: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 0)
+    │   └─ ← [Stop]
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3:
+not nftowner)
+    │   └─ ← [Return]
+    ├─ [708] NFTMarket::list(0, 100, DummyERC20: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   └─ ← [Revert] revert: not nftowner
+    ├─ [0] VM::prank(ECRecover: [0x0000000000000000000000000000000000000001])
+    │   └─ ← [Return]
+    ├─ [24171] NFTMarket::mint()
+    │   ├─ emit Mint(owner: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 1)
+    │   └─ ← [Stop]
+    ├─ [0] VM::expectEmit(true, false, false, true)
+    │   └─ ← [Return]
+    ├─ emit List(seller: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 1, price: 100)
+    ├─ [0] VM::prank(ECRecover: [0x0000000000000000000000000000000000000001])
+    │   └─ ← [Return]
+    ├─ [69334] NFTMarket::list(1, 100, DummyERC20: [0x2e234DAe75C793f67A35089C9d99245E1C58470b])
+    │   ├─ emit List(seller: ECRecover: [0x0000000000000000000000000000000000000001], tokenId: 1, price: 100)
+    │   └─ ← [Stop]
+    └─ ← [Stop]
+
+Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 22.81ms (22.69ms CPU time)
+
+Ran 1 test suite in 767.23ms (22.81ms CPU time): 3 tests passed, 0 failed, 0 skipped (3 total tests)
