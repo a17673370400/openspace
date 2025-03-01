@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDT 交易监控</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .block-info, .transactions {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .block-info h2, .transactions h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .tx-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            word-break: break-all;
+        }
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+        .amount {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="block-info">
+            <h2>最新区块信息</h2>
+            <p>区块高度: <span id="blockHeight"></span></p>
+            <p>区块哈希: <span id="blockHash"></span></p>
+        </div>
+        <div class="transactions">
+            <h2>USDT 转账流水</h2>
+            <div id="txList"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // 导入所需的库（需要通过 CDN 或本地打包）
+        import { createPublicClient, http } from 'https://esm.sh/viem@2.23.5';
+        import { mainnet } from 'https://esm.sh/viem@2.23.5/chains';
+
+        import { Interface } from 'https://unpkg.com/ethers@latest/dist/ethers.min.js';
+
+        // 创建客户端
+        const client = createPublicClient({
+            chain: mainnet,
+            transport: http('https://eth-mainnet.g.alchemy.com/v2/nOeWCu5iDox9ohhZQ3XU3pP_F59GSe8_'),
+        });
+
+        // ERC-20 配置
+        const transferFunctionSignature = '0xa9059cbb';
+        const USDT_CONTRACT_ADDRESS = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
+        const abi = ['function transfer(address recipient, uint256 amount)'];
+        const iface = new Interface(abi);
+
+        // 更新区块信息
+        const getLatestBlock = async () => {
+            try {
+                const block = await client.getBlock('latest');
+                document.getElementById('blockHeight').textContent = block.number;
+                document.getElementById('blockHash').textContent = block.hash;
+            } catch (error) {
+                console.error('Error fetching latest block:', error);
+            }
+        };
+
+        // 获取并显示交易
+        const getLatestTransactions = async () => {
+    try {
+        const block = await client.getBlock({ blockTag: 'latest' });
+        const txList = document.getElementById('txList');
+
+        // 获取所有交易的 Promise 数组
+        const txPromises = block.transactions.map(txHash =>
+            client.getTransaction({ hash: txHash }).catch(err => {
+                console.error(`Error fetching transaction ${txHash}:`, err);
+                return null; // 出错时返回 null，避免中断
+            })
+        );
+
+        // 并行处理所有交易
+        const transactions = (await Promise.all(txPromises)).filter(tx => tx !== null);
+
+        // 过滤并处理 USDT 转账
+        const usdtTxs = transactions.filter(tx =>
+            tx.to?.toLowerCase() === USDT_CONTRACT_ADDRESS.toLowerCase() &&
+            tx.input.startsWith(transferFunctionSignature)
+        );
+
+        // 批量更新 DOM
+        const fragment = document.createDocumentFragment();
+        for (const tx of usdtTxs) {
+            const decodedData = iface.decodeFunctionData('transfer', tx.input);
+            const recipient = decodedData[0];
+            const transferAmount = decodedData[1];
+            const amountInUSDT = Number(transferAmount) / 1e6;
+
+            const txItem = document.createElement('div');
+            txItem.className = 'tx-item';
+            txItem.innerHTML = `
+                区块 ${block.number}: 从 ${tx.from} 转账到 ${recipient}, 
+                金额 <span class="amount">${amountInUSDT.toFixed(6)}</span> USDT
+            `;
+            fragment.appendChild(txItem);
+        }
+
+        // 一次性插入所有新交易
+        txList.insertBefore(fragment, txList.firstChild);
+        while (txList.children.length > 50) {
+            txList.removeChild(txList.lastChild);
+        }
+
+    } catch (error) {
+        console.error('Error fetching latest transactions:', error);
+    }
+};
+        // 设置定时器
+        setInterval(getLatestBlock, 5000);
+        setInterval(getLatestTransactions, 5000);
+
+        // 初次执行
+        getLatestBlock();
+        getLatestTransactions();
+    </script>
+</body>
+</html>
