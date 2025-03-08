@@ -67,6 +67,7 @@
     https://sepolia.etherscan.io/tx/0x8e81326bbf70695015e0505d4587833b21c5febc74624dc261cf4b1be1888988
     返回Fail with error 'invalid signature'
 
--   通过正确的离线签名参数 上架nft 哈希
+-   通过正确的离线签名参数 上架3个nft 哈希
     https://sepolia.etherscan.io/tx/0x7efa1b6cf0207d2920fd57b114749b8d18c1e9ee1853f5efb60fdc7dd72d2dc8
-
+    https://sepolia.etherscan.io/tx/0xabbd942c2be01930e19b67773f1dc6b985eca3cfb7951fb1d24ce7a3db664593
+    https://sepolia.etherscan.io/tx/0x1ff2ca6f4f94bcb61ef48fffd8ea2ff79a0a833217933a7020b0b813996b3366
