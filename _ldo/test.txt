@@ -1,0 +1,153 @@
+[PASS] testDevClaim() (gas: 120678)
+Traces:
+  [120678] IdoTest::testDevClaim()
+    ├─ [0] VM::deal(0x0000000000000000000000000000000000000123, 5000000000000000000 [5e18])
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000123)
+    │   └─ ← [Return]
+    ├─ [51543] ido::preSale{value: 5000000000000000000}()
+    │   └─ ← [Stop]
+    ├─ [0] VM::deal(0x0000000000000000000000000000000000000456, 5000000000000000000 [5e18])
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000456)
+    │   └─ ← [Return]
+    ├─ [23643] ido::preSale{value: 5000000000000000000}()
+    │   └─ ← [Stop]
+    ├─ [0] VM::warp(86402 [8.64e4])
+    │   └─ ← [Return]
+    ├─ [305] ido::Total() [staticcall]
+    │   └─ ← [Return] 10000000000000000000 [1e19]
+    ├─ [0] VM::assertEq(10000000000000000000 [1e19], 10000000000000000000 [1e19]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000011)
+    │   └─ ← [Return]
+    ├─ [12089] ido::devClaim()
+    │   ├─ [0] 0x0000000000000000000000000000000000000011::fallback{value: 10000000000000000000}()
+    │   │   └─ ← [Stop]
+    │   └─ ← [Stop]
+    ├─ [0] VM::assertEq(10000000000000000000 [1e19], 10000000000000000000 [1e19], "owner should receive 10 ETH") [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Stop]
+
+[PASS] testPreSale() (gas: 89996)
+Traces:
+  [89996] IdoTest::testPreSale()
+    ├─ [0] VM::deal(0x0000000000000000000000000000000000000123, 15000000000000000000 [1.5e19])
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000123)
+    │   └─ ← [Return]
+    ├─ [0] VM::expectRevert(custom error 0xf28dceb3:  Exceeding the maximum)
+    │   └─ ← [Return]
+    ├─ [6768] ido::preSale{value: 11000000000000000000}()
+    │   └─ ← [Revert] revert: Exceeding the maximum
+    ├─ [2305] ido::Total() [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0, "Total should not increase on failed preSale") [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000123)
+    │   └─ ← [Return]
+    ├─ [49543] ido::preSale{value: 2000000000000000000}()
+    │   └─ ← [Stop]
+    ├─ [305] ido::Total() [staticcall]
+    │   └─ ← [Return] 2000000000000000000 [2e18]
+    ├─ [0] VM::assertEq(2000000000000000000 [2e18], 2000000000000000000 [2e18], "Total should be 2 ETH") [staticcall]   
+    │   └─ ← [Return]
+    ├─ [559] ido::UserTotal(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 2
+    ├─ [0] VM::assertEq(2, 2, "UserTotal should be 2 tokens") [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertEq(2000000000000000000 [2e18], 2000000000000000000 [2e18], "Contract balance should be 2 ETH") [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Stop]
+
+[PASS] testPresaleRefund() (gas: 62263)
+Traces:
+  [82163] IdoTest::testPresaleRefund()
+    ├─ [0] VM::deal(0x0000000000000000000000000000000000000123, 5000000000000000000 [5e18])
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000123)
+    │   └─ ← [Return]
+    ├─ [51543] ido::preSale{value: 2000000000000000000}()
+    │   └─ ← [Stop]
+    ├─ [0] VM::warp(86402 [8.64e4])
+    │   └─ ← [Return]
+    ├─ [305] ido::Total() [staticcall]
+    │   └─ ← [Return] 2000000000000000000 [2e18]
+    ├─ [0] VM::assertEq(2000000000000000000 [2e18], 2000000000000000000 [2e18]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000123)
+    │   └─ ← [Return]
+    ├─ [8003] ido::Presalerefund()
+    │   ├─ [0] 0x0000000000000000000000000000000000000123::fallback{value: 2000000000000000000}()
+    │   │   └─ ← [Stop]
+    │   └─ ← [Stop]
+    ├─ [559] ido::UserTotal(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::assertEq(5000000000000000000 [5e18], 5000000000000000000 [5e18]) [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Stop]
+
+[PASS] testUserTokenClaim() (gas: 127099)
+Traces:
+  [146999] IdoTest::testUserTokenClaim()
+    ├─ [0] VM::deal(0x0000000000000000000000000000000000000123, 5000000000000000000 [5e18])
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000123)
+    │   └─ ← [Return]
+    ├─ [51543] ido::preSale{value: 5000000000000000000}()
+    │   └─ ← [Stop]
+    ├─ [0] VM::deal(0x0000000000000000000000000000000000000456, 5000000000000000000 [5e18])
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000456)
+    │   └─ ← [Return]
+    ├─ [23643] ido::preSale{value: 5000000000000000000}()
+    │   └─ ← [Stop]
+    ├─ [0] VM::warp(86402 [8.64e4])
+    │   └─ ← [Return]
+    ├─ [305] ido::Total() [staticcall]
+    │   └─ ← [Return] 10000000000000000000 [1e19]
+    ├─ [0] VM::assertEq(10000000000000000000 [1e19], 10000000000000000000 [1e19]) [staticcall]
+    │   └─ ← [Return]
+    ├─ [0] VM::prank(0x0000000000000000000000000000000000000123)
+    │   └─ ← [Return]
+    ├─ [35860] ido::UserTokenClaim()
+    │   ├─ [29982] Myerc20::transfer(0x0000000000000000000000000000000000000123, 5)
+    │   │   ├─ emit Transfer(from: ido: [0x3112881D2b752d513Cce716adC0B6cBc28C3Fb7d], to: 0x0000000000000000000000000000000000000123, value: 5)
+    │   │   └─ ← [Return] true
+    │   │   └─ ← [Return] true
+    │   └─ ← [Stop]
+    ├─ [559] Myerc20::balanceOf(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 5
+    ├─ [0] VM::assertEq(5, 5, "user1 should receive 5 tokens") [staticcall]
+    │   └─ ← [Return]
+    ├─ [559] ido::UserTotal(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Stop]
+    ├─ [559] Myerc20::balanceOf(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 5
+    ├─ [0] VM::assertEq(5, 5, "user1 should receive 5 tokens") [staticcall]
+    │   └─ ← [Return]
+    ├─ [559] ido::UserTotal(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return] 5
+    ├─ [0] VM::assertEq(5, 5, "user1 should receive 5 tokens") [staticcall]
+    │   └─ ← [Return]
+    ├─ [559] ido::UserTotal(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    ├─ [0] VM::assertEq(5, 5, "user1 should receive 5 tokens") [staticcall]
+    │   └─ ← [Return]
+    ├─ [559] ido::UserTotal(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    ├─ [559] ido::UserTotal(0x0000000000000000000000000000000000000123) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] VM::assertEq(0, 0) [staticcall]
+    │   └─ ← [Return]
+    └─ ← [Stop]
